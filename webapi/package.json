@@ -1,0 +1,24 @@
+{
+  "name": "webapi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "nodemailer": "^7.0.3",
+    "prisma": "^6.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "sucrase": "^3.35.0"
+  },
+  "scripts": {
+    "dev": "nodemon ./src/index.js",
+    "db": "yarn prisma studio --port 5557",
+    "git": "git add . && git commit -m \"update\" && git push",
+    "mg": "prisma migrate dev"
+  }
+}
