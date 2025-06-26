@@ -6,5 +6,10 @@ export const UrlRotas = {
     ADMIN: "/usuario/admin",
     LOGIN_ADMIN: "/usuario/login-admin",
     RECUPERAR_SENHA: "/usuario/recuperar-senha",
-    REDEFINIR_SENHA: "/usuario/redefinir-senha"
+    REDEFINIR_SENHA: "/usuario/redefinir-senha",
+    GATOS: "/gatos",
+    GATOS_ADMIN: "/gatos/admin",
+    GATO: "/gato",
+    RECEBIMENTO_GATOS: "/recebimento-gatos",
+    RECEBIMENTO_GATO: "/recebimento-gato",
 };

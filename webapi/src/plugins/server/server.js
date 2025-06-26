@@ -31,6 +31,14 @@ class Servidor {
             Constantes.UrlRota.API,
             new Rota.USUARIO().GetRotas()
         );
+        this.#appExpress.use(
+            Constantes.UrlRota.API,
+            new Rota.GATO().GetRotas()
+        );
+          this.#appExpress.use(
+            Constantes.UrlRota.API,
+            new Rota.RECEBIMENTO().GetRotas()
+        );
     }
 
     Rodar() {

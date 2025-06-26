@@ -25,16 +25,6 @@ model Usuario {
   FormularioAdocao     FormularioAdocao[]
 }
 
-model AvaliacaoUsuario {
-  id_avaliacao   Int      @id @default(autoincrement())
-  id_usuario     Int
-  nota           Int
-  comentario     String
-  data_avaliacao DateTime
-
-  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
-}
-
 model Gato {
   id_gato              Int                    @id @default(autoincrement())
   nome                 String
@@ -45,24 +35,72 @@ model Gato {
   descricao            String
   fotos                Json
   sociavel             Boolean
-  status               StatusGato             @default(DISPONIVEL)
+  status               StatusGato             @default(INDISPONIVEL)
   data_casdastro       DateTime
-  VacinaVermifugo      VacinaVermifugo[]
+
+  AplicacaoVacina      AplicacaoVacina[]
+  Castracao            Castracao[]
   Solicitacao          Solicitacao[]
   TermoDisponibilidade TermoDisponibilidade[]
   FormularioAdocao     FormularioAdocao[]
+  RecebimentoGato      RecebimentoGato[]
 }
 
-model VacinaVermifugo {
-  id_vv          Int      @id @default(autoincrement())
-  id_gato        Int
-  tipo           TipoVV
-  nome           String
-  data_aplicacao DateTime
-  validade       DateTime
-  observacoes    String
+model RecebimentoGato {
+  id_recebimento       Int      @id @default(autoincrement())
+  nome_responsavel     String
+  cpf_responsavel      String
+  contato_responsavel  String
+  origem               OrigemGato
+  data_recebimento     DateTime
+  observacoes          String?
+  fotos                Json?
+  status               StatusRecebimento @default(RECEBIDO)
+  id_gato              Int?
 
-  gato Gato @relation(fields: [id_gato], references: [id_gato])
+  gato Gato? @relation(fields: [id_gato], references: [id_gato])
+}
+
+model Vacina {
+  id_vacina    Int      @id @default(autoincrement())
+  nome         String   @unique
+  descricao    String?
+  preco        Float?
+  aplicacoes   AplicacaoVacina[]
+}
+
+model AplicacaoVacina {
+  id_aplicacao     Int      @id @default(autoincrement())
+  id_gato          Int
+  id_vacina        Int
+  data_aplicacao   DateTime
+  validade         DateTime
+  proxima_dose     DateTime?
+  observacoes      String?
+
+  gato    Gato    @relation(fields: [id_gato], references: [id_gato])
+  vacina  Vacina  @relation(fields: [id_vacina], references: [id_vacina])
+}
+
+model Castracao {
+  id_castracao     Int      @id @default(autoincrement())
+  id_gato          Int
+  data_castracao   DateTime
+  local            String?
+  responsavel      String?
+  observacoes      String?
+
+  gato    Gato    @relation(fields: [id_gato], references: [id_gato])
+}
+
+model AvaliacaoUsuario {
+  id_avaliacao   Int      @id @default(autoincrement())
+  id_usuario     Int
+  nota           Int
+  comentario     String
+  data_avaliacao DateTime
+
+  usuario Usuario @relation(fields: [id_usuario], references: [id_usuario])
 }
 
 model Solicitacao {
@@ -70,7 +108,7 @@ model Solicitacao {
   id_usuario       Int
   id_gato          Int
   tipo             TipoSolicitacao
-  status           StatusSolicitacao @default(PEDENTE)
+  status           StatusResposta    @default(PENDENTE)
   data_solicitacao DateTime
   data_resposta    DateTime
 
@@ -105,7 +143,7 @@ model FormularioAdocao {
   id_usuario        Int
   id_gato           Int
   respostas         Json
-  status            StatusFormulario @default(PEDENTE)
+  status            StatusResposta   @default(PENDENTE)
   data_envio        DateTime
   data_avaliacao    DateTime?
   observacoes_admin String
@@ -123,14 +161,32 @@ model Recuperacaosenha {
   criado_em DateTime @default(now())
 }
 
+// Enums
+
 enum Sexo {
   MACHO
   FEMEA
 }
 
-enum TipoVV {
-  VACINACAO
-  VERMIFUGO
+enum OrigemGato {
+  RUA
+  DOACAO
+  RESGATE
+  OUTROS
+}
+
+enum StatusRecebimento {
+  RECEBIDO
+  TRIAGEM
+  FINALIZADO
+  RECUSADO
+}
+
+enum StatusGato {
+  INDISPONIVEL
+  DISPONIVEL
+  EM_LAR_TEMPORARIO
+  ADOTADO
 }
 
 enum TipoSolicitacao {
@@ -138,21 +194,8 @@ enum TipoSolicitacao {
   ADOCAO
 }
 
-enum StatusGato {
-  DISPONIVEL
-  EM_LAR_TEMPORARIO
-  ADOTADO
-  INDISPONIVEL
-}
-
-enum StatusSolicitacao {
-  PEDENTE
-  APROVADO
-  REJEITADO
-}
-
-enum StatusFormulario {
-  PEDENTE
+enum StatusResposta {
+  PENDENTE
   APROVADO
   REJEITADO
 }
